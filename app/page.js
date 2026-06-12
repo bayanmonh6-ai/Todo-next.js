@@ -1,65 +1,152 @@
+"use client";
+
+import { useState } from "react";
+import { Todo } from "./_components/Todo";
+import { TaskStats } from "./_components/TaskStats";
+
 import Image from "next/image";
 
 export default function Home() {
+  const [number, setNumber] = useState(0);
+  const [value, setValue] = useState("");
+  const [todos, setTodos] = useState([]);
+
+  console.log("taskuud maani", todos);
+
+  const [selected, setSelected] = useState("all");
+  const handleAll = () => {
+    setSelected("all");
+  };
+  const handleActive = () => {
+    setSelected("active");
+  };
+  const handleCompleted = () => {
+    setSelected("completed");
+  };
+
+  const toggleTodo = (id) => {
+    setTodos(
+      todos.map((task) =>
+        task.id === id ? { ...task, checked: !task.checked } : task,
+      ),
+    );
+  };
+
+  const filteredTask = todos.filter((todo) => {
+    if (selected === "all") {
+      return todo;
+    } else if (selected === "active") {
+      return !todo.checked;
+    } else if (selected === "completed") {
+      return todo.checked;
+    }
+  });
+
+  const clickAdd = () => {
+    if (!value.trim()) return;
+    setNumber(number + 1);
+
+    setTodos([
+      ...todos,
+      {
+        id: number,
+        text: value,
+        checked: false,
+      },
+    ]);
+    setValue("");
+  };
+
+  const clearCompleted = () => {
+    setTodos(todos.filter((todo) =>!todo.checked));
+  }
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className=" w-full flex justify-center items-center ">
+      <div className="w-94 border mt-15 rounded-lg h-fit px-4 py-6 flex flex-col gap-10 bg-[#FFFFFF] border-gray-100 p-6 shadow-lg">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-5">
+            <button
+              className="text-center font-semibold text-[20px]"
+              // onClick={clickAdd}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              To-Do list
+            </button>
+            {/* <p>{number} Tasks</p> */}
+            <div className="flex gap-1.5">
+              <input
+                className="border rounded-lg w-full"
+                placeholder="Add a new task..."
+                value={value}
+                onChange={(event) => setValue(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    clickAdd();
+                  }
+                }}
+              />
+              <button
+                className="bg-[#3C82F6] rounded-lg px-4 py-3 text-[#F9F9F9] text-[14px]"
+                onClick={clickAdd}
+              >
+                Add
+              </button>
+            </div>
+
+            <div className="flex gap-1.5">
+              <button
+                className={` rounded-lg px-4 py-3 text-black text-[14px] ${selected == "all" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
+                onClick={handleAll}
+              >
+                All
+              </button>
+              <button
+                className={` rounded-lg px-4 py-3 text-black text-[14px] ${selected == "active" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
+                onClick={handleActive}
+              >
+                Active
+              </button>
+              <button
+                className={` rounded-lg px-4 py-3 text-black text-[14px] ${selected == "completed" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
+                onClick={handleCompleted}
+              >
+                Completed
+              </button>
+            </div>
+            {filteredTask.length == 0 ? (
+              <div className="text-center font-normal text-[14px] text-[#6B7280]">
+                No tasks yet. Add one above!
+              </div>
+            ) : (
+              <div className="flex flex-col gap-5">
+                {filteredTask.map((item, index) => {
+                  return (
+                    <Todo key={item.id} value={item} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
+                  );
+                })}
+              </div>
+            )}
+            {todos.length > 0 && (
+              <div className="flex justify-between items-center mt-4 border-t border-[#E4E4E7] pt-4">
+              <TaskStats todos={todos} />
+              <button onClick={clearCompleted}
+                className="text-red-500 font-normal text-[14px]">
+                Clear completed
+                </button>
+            </div>
+            )}
+            
+          </div>
+          <div className="text-center text-[12px] text-[#6B7280]">
+            Powered by <span className="text-[#3B73ED]">Pinecone academy</span>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
+      <div></div>
     </div>
   );
 }
