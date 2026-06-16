@@ -13,7 +13,7 @@ export const Todo = ({ value, toggleTodo, deleteTodo}) => {
       </div>
       <button 
       onClick={() => deleteTodo(value.id)}
-      className="bg-[#FEF2F2] text-[#EF4444] text-center text-[14px] px-3 py-1.6 ml-35 rounded-lg">
+      className="bg-[#FEF2F2] text-[#EF4444] text-center text-[14px] px-3 py-1.6 ml-35 rounded-lg cursor-pointer transition-all duration-150 active:scale-95">
         Delete
       </button>
     </div>

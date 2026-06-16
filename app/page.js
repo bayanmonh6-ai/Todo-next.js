@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Todo } from "./_components/Todo";
 import { TaskStats } from "./_components/TaskStats";
 
-import Image from "next/image";
 
 export default function Home() {
   const [number, setNumber] = useState(0);
@@ -79,7 +78,7 @@ export default function Home() {
             {/* <p>{number} Tasks</p> */}
             <div className="flex gap-1.5">
               <input
-                className="border rounded-lg w-full"
+                className="border rounded-lg w-full pl-2"
                 placeholder="Add a new task..."
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
@@ -90,7 +89,7 @@ export default function Home() {
                 }}
               />
               <button
-                className="bg-[#3C82F6] rounded-lg px-4 py-3 text-[#F9F9F9] text-[14px]"
+                className="bg-[#3C82F6] rounded-lg px-4 py-3 text-[#F9F9F9] text-[14px] cursor-pointer transition-all duration-150 active:scale-95"
                 onClick={clickAdd}
               >
                 Add
@@ -99,19 +98,19 @@ export default function Home() {
 
             <div className="flex gap-1.5">
               <button
-                className={` rounded-lg px-4 py-3 text-black text-[14px] ${selected == "all" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
+                className={` rounded-lg px-4 py-3 text-black text-[14px] cursor-pointer trasition-all duration-150 active:scale-95 ${selected == "all" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
                 onClick={handleAll}
               >
                 All
               </button>
               <button
-                className={` rounded-lg px-4 py-3 text-black text-[14px] ${selected == "active" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
+                className={` rounded-lg px-4 py-3 text-black text-[14px] cursor-pointer transition-all duration-150 active:scale-95 ${selected == "active" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
                 onClick={handleActive}
               >
                 Active
               </button>
               <button
-                className={` rounded-lg px-4 py-3 text-black text-[14px] ${selected == "completed" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
+                className={` rounded-lg px-4 py-3 text-black text-[14px] cursor-pointer transition-all duration-150 active:scale-95 ${selected == "completed" ? "bg-[#3C82F6] text-white" : "bg-[#F3F4F6]"} `}
                 onClick={handleCompleted}
               >
                 Completed
@@ -134,7 +133,8 @@ export default function Home() {
               <div className="flex justify-between items-center mt-4 border-t border-[#E4E4E7] pt-4">
               <TaskStats todos={todos} />
               <button onClick={clearCompleted}
-                className="text-red-500 font-normal text-[14px]">
+                className="text-red-500 font-normal text-[14px] cursor-pointer transition-all duration-150 active:border-b-2 active:border-red-500 active:translate-y-1 "
+                >
                 Clear completed
                 </button>
             </div>
